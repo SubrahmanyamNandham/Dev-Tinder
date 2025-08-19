@@ -1,11 +1,21 @@
-const express =require("express");
-
+const express = require("express");
+const connectDB = require("./config/database");
 const app = express();
 
-app.use("/", (req, res)=>{
-    res.send("hello world")
-})
+app.use(express.json());
 
-app.listen(5000, ()=>{
-    console.log('server running')
+const authRouter = require("./routes/auth");
+
+app.use("/", authRouter);
+
+connectDB()
+.then(()=>{
+    console.log("db Connected")
+    app.listen(5000, ()=>{
+        console.log('server running')
+    })
 })
+.catch((err) => {
+    console.log("error")  
+}
+)
